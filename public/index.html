@@ -48,7 +48,7 @@
       <section class="screen" id="play">
         <button class="back-link" data-screen="home">← BACK TO HOME</button>
         <p class="eyebrow">CHOOSE YOUR EXPERIENCE</p><h1>Game modes</h1>
-        <div class="feature-card"><div class="feature-icon">🤖</div><div><h3>Play Solo</h3><p>Practice against AI opponents. Easy, Medium and Hard difficulty will be available in the game phase.</p><span class="status">COMING IN PHASE 03</span></div></div>
+        <div class="feature-card"><div class="feature-icon">🤖</div><div><h3>Play Solo</h3><p>Face three arena rivals. Choose your AI difficulty and play a complete classic match.</p><span class="status">PLAYABLE NOW · PHASE 03</span></div></div><div class="solo-launch"><label for="ai-difficulty">AI DIFFICULTY</label><select id="ai-difficulty"><option value="easy">Easy · Relaxed</option><option value="medium" selected>Medium · Balanced</option><option value="hard">Hard · Strategic</option></select><button class="primary-btn" id="start-solo">START SOLO MATCH <span>→</span></button></div>
         <div class="feature-card"><div class="feature-icon">👥</div><div><h3>Play with Friends</h3><p>Create a private room, invite friends and compete with 2–4 players.</p><span class="status">COMING IN PHASE 04</span></div></div>
         <div class="feature-card"><div class="feature-icon">⚡</div><div><h3>Quick Match</h3><p>Find other players and jump into a match.</p><span class="status">COMING IN PHASE 04</span></div></div>
         <button class="primary-btn board-launch" data-screen="board">OPEN LUDO BOARD PREVIEW <span>→</span></button>
@@ -57,9 +57,9 @@
 
       <section class="screen board-screen" id="board">
         <button class="back-link" data-screen="play">← BACK TO GAME MODES</button>
-        <div class="board-heading"><div><p class="eyebrow">THE ROYAL ARENA</p><h1>Ludo Board</h1><p class="muted">Classic four-colour board preview</p></div><span class="live-pill">✦ PREVIEW</span></div>
+        <div class="board-heading"><div><p class="eyebrow">THE ROYAL ARENA</p><h1>Ludo Board</h1><p class="muted">Classic four-colour board preview</p></div><span class="live-pill" id="game-status">✦ READY</span></div>
         <div class="match-strip"><div class="mini-player"><i class="dot red"></i><div><b>Red Player</b><small>Waiting</small></div></div><div class="mini-player"><i class="dot green"></i><div><b>Green Player</b><small>Waiting</small></div></div></div>
-        <div class="board-frame"><div class="ludo-board" id="ludo-board" role="img" aria-label="Four colour Ludo board preview"></div>
+        <div class="board-frame"><div class="ludo-board" id="ludo-board" aria-label="Interactive Ludo board"></div>
           <div class="board-legend"><span class="red">● RED</span><span class="green">● GREEN</span><span class="yellow">● YELLOW</span><span class="blue">● BLUE</span></div>
         </div>
         <div class="match-strip"><div class="mini-player"><i class="dot blue"></i><div><b>Blue Player</b><small>Waiting</small></div></div><div class="mini-player"><i class="dot yellow"></i><div><b>Yellow Player</b><small>Waiting</small></div></div></div>
@@ -108,6 +108,6 @@
     </nav>
     <div class="toast" id="toast" role="status"></div>
   </div>
-  <script src="/app.js"></script>
+  <script src="/game-engine.js"></script>\n  <script src="/app.js"></script>
 </body>
 </html>
