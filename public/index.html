@@ -51,7 +51,20 @@
         <div class="feature-card"><div class="feature-icon">🤖</div><div><h3>Play Solo</h3><p>Practice against AI opponents. Easy, Medium and Hard difficulty will be available in the game phase.</p><span class="status">COMING IN PHASE 03</span></div></div>
         <div class="feature-card"><div class="feature-icon">👥</div><div><h3>Play with Friends</h3><p>Create a private room, invite friends and compete with 2–4 players.</p><span class="status">COMING IN PHASE 04</span></div></div>
         <div class="feature-card"><div class="feature-icon">⚡</div><div><h3>Quick Match</h3><p>Find other players and jump into a match.</p><span class="status">COMING IN PHASE 04</span></div></div>
-        <div class="notice">The dashboard is live. Game modes will activate as their development phases are completed.</div>
+        <button class="primary-btn board-launch" data-screen="board">OPEN LUDO BOARD PREVIEW <span>→</span></button>
+        <div class="notice">The board preview is visual only. Playable rules arrive in Phase 03.</div>
+      </section>
+
+      <section class="screen board-screen" id="board">
+        <button class="back-link" data-screen="play">← BACK TO GAME MODES</button>
+        <div class="board-heading"><div><p class="eyebrow">THE ROYAL ARENA</p><h1>Ludo Board</h1><p class="muted">Classic four-colour board preview</p></div><span class="live-pill">✦ PREVIEW</span></div>
+        <div class="match-strip"><div class="mini-player"><i class="dot red"></i><div><b>Red Player</b><small>Waiting</small></div></div><div class="mini-player"><i class="dot green"></i><div><b>Green Player</b><small>Waiting</small></div></div></div>
+        <div class="board-frame"><div class="ludo-board" id="ludo-board" role="img" aria-label="Four colour Ludo board preview"></div>
+          <div class="board-legend"><span class="red">● RED</span><span class="green">● GREEN</span><span class="yellow">● YELLOW</span><span class="blue">● BLUE</span></div>
+        </div>
+        <div class="match-strip"><div class="mini-player"><i class="dot blue"></i><div><b>Blue Player</b><small>Waiting</small></div></div><div class="mini-player"><i class="dot yellow"></i><div><b>Yellow Player</b><small>Waiting</small></div></div></div>
+        <div class="dice-panel"><div><span class="eyebrow">CURRENT TURN</span><b>Waiting for match</b><small>Turn system unlocks in Phase 03</small></div><button class="dice-button" id="roll-dice"><span id="dice-face">⚄</span><small>ROLL DICE</small></button></div>
+        <div class="notice">Board preview only: dice animation does not move tokens. Game rules, turns and captures are Phase 03.</div>
       </section>
 
       <section class="screen" id="profile">
