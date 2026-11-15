@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10091e">
+  <title>Ludo Arena</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">♛</div>
+        <div><div class="brand-name">LUDO <span>ARENA</span></div><div class="brand-sub">PLAY · WIN · ENJOY</div></div>
+      </div>
+      <button class="icon-btn" data-screen="settings" aria-label="Settings">⚙</button>
+    </header>
+
+    <main>
+      <section class="screen active" id="home">
+        <div class="welcome">
+          <div><p class="eyebrow">WELCOME BACK</p><h1>Ready to play<span>?</span></h1><p class="muted">Your arena. Your move. Your victory.</p></div>
+          <div class="level-badge"><span>★</span><b>LVL 01</b></div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-glow"></div>
+          <div class="hero-copy"><span class="pill">THE CLASSIC, REIMAGINED</span><h2>Rule the<br><em>ARENA.</em></h2><p>Bring your best moves. The board is waiting.</p><button class="primary-btn" data-screen="play">EXPLORE GAME MODES <span>→</span></button></div>
+          <div class="hero-dice" aria-hidden="true"><div class="die">⚄</div><div class="spark s1">✦</div><div class="spark s2">✧</div></div>
+        </div>
+
+        <div class="section-heading"><div><p class="eyebrow">YOUR ARENA</p><h2>Choose your game</h2></div><span class="small-tag">PHASE 01</span></div>
+        <div class="mode-grid">
+          <button class="mode-card solo" data-screen="play"><span class="mode-icon">♟</span><b>Play Solo</b><small>Challenge the AI</small><span class="card-arrow">↗</span></button>
+          <button class="mode-card friends" data-screen="play"><span class="mode-icon">♙</span><b>Play with Friends</b><small>Bring your squad</small><span class="card-arrow">↗</span></button>
+        </div>
+
+        <div class="section-heading"><div><p class="eyebrow">PLAYER ZONE</p><h2>Your progress</h2></div></div>
+        <div class="stats-grid">
+          <div class="stat-card"><span>🏆</span><b id="wins">0</b><small>Wins</small></div>
+          <div class="stat-card"><span>🎮</span><b id="games">0</b><small>Games played</small></div>
+          <div class="stat-card"><span>⭐</span><b id="xp">0</b><small>XP earned</small></div>
+        </div>
+      </section>
+
+      <section class="screen" id="play">
+        <button class="back-link" data-screen="home">← BACK TO HOME</button>
+        <p class="eyebrow">CHOOSE YOUR EXPERIENCE</p><h1>Game modes</h1>
+        <div class="feature-card"><div class="feature-icon">🤖</div><div><h3>Play Solo</h3><p>Practice against AI opponents. Easy, Medium and Hard difficulty will be available in the game phase.</p><span class="status">COMING IN PHASE 03</span></div></div>
+        <div class="feature-card"><div class="feature-icon">👥</div><div><h3>Play with Friends</h3><p>Create a private room, invite friends and compete with 2–4 players.</p><span class="status">COMING IN PHASE 04</span></div></div>
+        <div class="feature-card"><div class="feature-icon">⚡</div><div><h3>Quick Match</h3><p>Find other players and jump into a match.</p><span class="status">COMING IN PHASE 04</span></div></div>
+        <div class="notice">The dashboard is live. Game modes will activate as their development phases are completed.</div>
+      </section>
+
+      <section class="screen" id="profile">
+        <button class="back-link" data-screen="home">← BACK TO HOME</button>
+        <p class="eyebrow">PLAYER IDENTITY</p><h1>Your profile</h1>
+        <div class="profile-card"><div class="avatar" id="avatar">♛</div><h2 id="player-name">Arena Player</h2><p id="player-handle" class="muted">@telegram_player</p><div class="profile-level">★ LEVEL 01 · ROOKIE</div></div>
+        <div class="stats-grid"><div class="stat-card"><b id="profile-wins">0</b><small>Wins</small></div><div class="stat-card"><b id="profile-games">0</b><small>Games</small></div><div class="stat-card"><b>0</b><small>Win rate</small></div></div>
+        <div class="notice">Your match statistics and achievements will appear here as you play.</div>
+      </section>
+
+      <section class="screen" id="leaderboard">
+        <button class="back-link" data-screen="home">← BACK TO HOME</button>
+        <p class="eyebrow">THE BEST OF THE BEST</p><h1>Leaderboard</h1>
+        <div class="empty-state"><div>🏆</div><h2>The arena awaits its champions</h2><p>Rankings will appear here after competitive matches launch.</p><span class="status">COMING IN PHASE 05</span></div>
+      </section>
+
+      <section class="screen" id="settings">
+        <button class="back-link" data-screen="home">← BACK TO HOME</button>
+        <p class="eyebrow">MAKE IT YOURS</p><h1>Settings</h1>
+        <div class="setting-row"><div><b>Sound effects</b><small>Game audio and feedback</small></div><label class="switch"><input type="checkbox" id="sound-toggle" checked><span></span></label></div>
+        <div class="setting-row"><div><b>Vibration</b><small>Haptic feedback where supported</small></div><label class="switch"><input type="checkbox" id="vibration-toggle" checked><span></span></label></div>
+        <div class="setting-row"><div><b>Reduce animations</b><small>Use simpler transitions</small></div><label class="switch"><input type="checkbox" id="motion-toggle"><span></span></label></div>
+        <button class="secondary-btn" id="reset-settings">RESET SETTINGS</button>
+      </section>
+
+      <section class="screen" id="help">
+        <button class="back-link" data-screen="home">← BACK TO HOME</button>
+        <p class="eyebrow">NEED A HAND?</p><h1>Help & Rules</h1>
+        <div class="feature-card"><div class="feature-icon">🎲</div><div><h3>Classic Ludo</h3><p>Each player has four tokens. Roll a six to bring a token out, move around the board and reach home.</p></div></div>
+        <div class="feature-card"><div class="feature-icon">🛡️</div><div><h3>Safe squares</h3><p>Tokens on designated safe squares cannot be captured.</p></div></div>
+        <div class="feature-card"><div class="feature-icon">🏁</div><div><h3>How to win</h3><p>Be the first player to bring all four tokens safely to the home area.</p></div></div>
+        <div class="notice">Full interactive rules and in-game tutorial will be added with the playable board.</div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-screen="home"><span>⌂</span><small>Home</small></button>
+      <button class="nav-item" data-screen="leaderboard"><span>♛</span><small>Ranks</small></button>
+      <button class="nav-item" data-screen="profile"><span>◉</span><small>Profile</small></button>
+      <button class="nav-item" data-screen="help"><span>ⓘ</span><small>Help</small></button>
+    </nav>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
