@@ -119,7 +119,7 @@ function getAuthenticatedUser(req) {
 }
 
 async function runAiTurns(state) {
-  for (let step = 0; step < 16 && state.status === "playing"; step += 1) {
+  for (let step = 0; step < 64 && state.status === "playing"; step += 1) {
     const player = state.players[state.currentPlayer];
     if (!player || player.type !== "ai") break;
     if (state.dice === null) state = LudoEngine.rollDice(state, crypto.randomInt(1, 7));
