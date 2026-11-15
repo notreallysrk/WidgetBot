@@ -158,7 +158,7 @@
       const result=await api("/api/game/solo",{difficulty:document.getElementById("ai-difficulty").value});
       gameState=result.state;renderGame();showScreen("board");toast("Your solo match is ready!");
     } catch(error){toast(error.message);}
-    finally{gameBusy=false;document.getElementById("start-solo").disabled=false;}
+    finally{gameBusy=false;document.getElementById("start-solo").disabled=false;if(gameState)renderGame();}
   }
   async function rollDice() {
     if(!gameState||gameBusy)return;
