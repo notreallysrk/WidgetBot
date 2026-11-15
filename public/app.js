@@ -145,7 +145,7 @@
       : player.name+"'s turn";
     document.getElementById("turn-help").textContent=gameState.status==="finished"?"Match complete":gameState.dice!==null
       ? "Dice: "+gameState.dice+" · Select a glowing token":"Roll the dice to continue";
-    document.getElementById("dice-face").textContent=gameState.dice?faces[gameState.dice]:"⚄";
+    document.getElementById("dice-face").textContent=gameState.dice?faces[gameState.dice]:(gameState.lastHumanRoll?faces[gameState.lastHumanRoll]:"🎲");
     document.getElementById("roll-dice").disabled=gameBusy||gameState.status!=="playing"||player.type!=="human"||gameState.dice!==null;
     document.getElementById("game-status").textContent=gameState.status==="finished"?"✦ COMPLETE":"✦ LIVE MATCH";
     document.getElementById("game-message").textContent=gameState.lastAction||"Your move";
