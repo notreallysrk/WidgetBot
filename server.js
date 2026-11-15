@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const { MongoClient } = require("mongodb");
 const { Telegraf, Markup } = require("telegraf");
 const path = require("path");
+const LudoEngine = require("./public/game-engine");
 
 const app = express();
 app.use(express.json({ limit: "32kb" }));
@@ -111,6 +112,97 @@ app.get("/api/profile", async (req, res) => {
   }
 });
 
+
+function getAuthenticatedUser(req) {
+  const initData = req.body?.initData || req.headers["x-telegram-init-data"] || "";
+  return verifyTelegramInitData(initData, BOT_TOKEN);
+}
+
+async function runAiTurns(state) {
+  for (let step = 0; step < 16 && state.status === "playing"; step += 1) {
+    const player = state.players[state.currentPlayer];
+    if (!player || player.type !== "ai") break;
+    if (state.dice === null) state = LudoEngine.rollDice(state, crypto.randomInt(1, 7));
+    if (state.dice !== null && state.legalMoves.length) {
+      const token = LudoEngine.chooseAiMove(state);
+      state = LudoEngine.moveToken(state, token);
+    }
+  }
+  return state;
+}
+
+async function persistGameAction(req, res, action) {
+  const user = getAuthenticatedUser(req);
+  if (!user) return res.status(401).json({ ok: false, error: "Invalid Telegram session" });
+  if (!db) return res.status(503).json({ ok: false, error: "Game service is starting. Please try again." });
+  const gameId = String(req.params.gameId || "");
+  if (!/^[a-f0-9-]{20,40}$/i.test(gameId)) return res.status(400).json({ ok: false, error: "Invalid game ID" });
+  try {
+    const games = db.collection("games");
+    const doc = await games.findOne({ gameId, telegramId: user.id });
+    if (!doc) return res.status(404).json({ ok: false, error: "Game not found" });
+    let state = doc.state;
+    if (action === "roll") {
+      if (state.players[state.currentPlayer]?.type !== "human") {
+        return res.status(409).json({ ok: false, error: "Wait for your turn", state });
+      }
+      state = LudoEngine.rollDice(state, crypto.randomInt(1, 7));
+    } else {
+      const tokenIndex = Number(req.body?.tokenIndex);
+      if (!Number.isInteger(tokenIndex)) return res.status(400).json({ ok: false, error: "Select a valid token" });
+      if (state.players[state.currentPlayer]?.type !== "human") {
+        return res.status(409).json({ ok: false, error: "Wait for your turn", state });
+      }
+      state = LudoEngine.moveToken(state, tokenIndex);
+    }
+    state = await runAiTurns(state);
+    const saved = await games.updateOne(
+      { _id: doc._id, revision: doc.revision },
+      { $set: { state, updatedAt: new Date() }, $inc: { revision: 1 } }
+    );
+    if (saved.modifiedCount !== 1) return res.status(409).json({ ok: false, error: "Game changed. Refreshing the latest state.", conflict: true });
+    if (state.status === "finished" && !doc.completedAt) {
+      const won = state.winner === String(user.id);
+      await db.collection("users").updateOne(
+        { telegramId: user.id },
+        { $inc: { gamesPlayed: 1, ...(won ? { wins: 1, xp: 25 } : { xp: 5 }) } }
+      );
+      await games.updateOne({ _id: doc._id, completedAt: { $exists: false } }, { $set: { completedAt: new Date() } });
+    }
+    return res.json({ ok: true, state, revision: doc.revision + 1 });
+  } catch (error) {
+    console.error("Game action failed:", error.message);
+    return res.status(400).json({ ok: false, error: error.message || "Game action failed" });
+  }
+}
+
+app.post("/api/game/solo", async (req, res) => {
+  const user = getAuthenticatedUser(req);
+  if (!user) return res.status(401).json({ ok: false, error: "Invalid Telegram session" });
+  if (!db) return res.status(503).json({ ok: false, error: "Game service is starting. Please try again." });
+  const difficulty = ["easy", "medium", "hard"].includes(req.body?.difficulty) ? req.body.difficulty : "medium";
+  try {
+    const state = LudoEngine.createGame([
+      { id: String(user.id), name: user.first_name || "You", type: "human" },
+      { id: "ai-green", name: "Arena AI", type: "ai", difficulty },
+      { id: "ai-yellow", name: "Royal Bot", type: "ai", difficulty },
+      { id: "ai-blue", name: "Shadow Bot", type: "ai", difficulty }
+    ]);
+    state.id = crypto.randomUUID();
+    await db.collection("games").insertOne({
+      gameId: state.id, telegramId: user.id, state, revision: 0,
+      createdAt: new Date(), updatedAt: new Date()
+    });
+    return res.json({ ok: true, state, revision: 0 });
+  } catch (error) {
+    console.error("Create solo game failed:", error.message);
+    return res.status(500).json({ ok: false, error: "Could not start a game" });
+  }
+});
+
+app.post("/api/game/:gameId/roll", (req, res) => persistGameAction(req, res, "roll"));
+app.post("/api/game/:gameId/move", (req, res) => persistGameAction(req, res, "move"));
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function connectMongo() {
@@ -135,6 +227,8 @@ async function connectMongo() {
       await database.collection("users").createIndex({ telegramId: 1 }, { unique: true });
       await database.collection("matches").createIndex({ createdAt: -1 });
       await database.collection("rooms").createIndex({ roomCode: 1 }, { unique: true, sparse: true });
+      await database.collection("games").createIndex({ gameId: 1, telegramId: 1 }, { unique: true });
+      await database.collection("games").createIndex({ updatedAt: 1 }, { expireAfterSeconds: 604800 });
       mongoClient = client;
       db = database;
       mongoStatus = "connected";
