@@ -68,3 +68,21 @@ button{font:inherit;color:inherit;cursor:pointer}.app-shell{max-width:760px;marg
 .dice-button{border:1px solid #fff0bd;background:linear-gradient(145deg,#fff4ce,#f2ca70 58%,#c88a2d);box-shadow:inset 0 2px 3px #fff,0 5px 0 #8d5b23,0 9px 17px #0007}
 .dice-button:active{transform:translateY(3px);box-shadow:inset 0 2px 3px #fff,0 2px 0 #8d5b23,0 5px 12px #0007}
 @media(max-width:420px){.board-frame{padding:6px;border-radius:19px}.board-frame:before{inset:3px;border-radius:16px}.ludo-board{border-width:3px;border-radius:8px}.board-cell.yard:before{inset:5%}.board-token{width:78%;height:78%}.board-heading h1{font-size:27px}}
+
+
+/* Phase 03 — playable solo match controls */
+.solo-launch{display:grid;grid-template-columns:1fr;gap:9px;margin:14px 0 4px;padding:15px;border:1px solid #76519a;border-radius:16px;background:linear-gradient(135deg,#251437,#171023);box-shadow:inset 0 1px #ffffff12}
+.solo-launch label{font-size:9px;font-weight:1000;letter-spacing:1.4px;color:var(--gold)}
+.solo-launch select{width:100%;padding:12px 13px;border-radius:11px;border:1px solid #674481;background:#120b1d;color:var(--text);font:inherit;font-size:12px;outline:none}
+.solo-launch .primary-btn{width:100%;margin:2px 0 0}
+#start-solo:disabled{opacity:.55;cursor:wait}
+.board-token{padding:0;appearance:none;cursor:default;line-height:1;min-width:0}
+.board-token:disabled{opacity:1}
+.board-token.movable{cursor:pointer;border-color:#fff;box-shadow:0 0 0 2px #f8d77c,0 0 12px 4px #ffe08b, inset 0 2px 3px #ffffffaa,inset 0 -3px 4px #0003;animation:token-pulse 1s ease-in-out infinite alternate}
+@keyframes token-pulse{from{filter:brightness(1)}to{filter:brightness(1.35)}}
+.mini-player.is-turn{border-color:#f4d17b;box-shadow:0 0 0 1px #f4d17b55,0 0 16px #e8b85b2b,inset 0 1px #ffffff18}
+.game-actions{display:flex;align-items:center;gap:12px;margin-top:10px}
+.game-actions .secondary-btn{width:auto;min-width:112px;margin:0;padding:11px 13px}
+#game-message{font-size:10px;color:var(--muted);line-height:1.4}
+#roll-dice:disabled{opacity:.48;filter:saturate(.65);cursor:not-allowed}
+@media(prefers-reduced-motion:reduce){.board-token.movable{animation:none}}
