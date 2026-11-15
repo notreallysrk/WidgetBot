@@ -86,3 +86,5 @@ button{font:inherit;color:inherit;cursor:pointer}.app-shell{max-width:760px;marg
 #game-message{font-size:10px;color:var(--muted);line-height:1.4}
 #roll-dice:disabled{opacity:.48;filter:saturate(.65);cursor:not-allowed}
 @media(prefers-reduced-motion:reduce){.board-token.movable{animation:none}}
+
+.board-cell.token-pile{flex-wrap:wrap;align-content:center;gap:0}.board-cell.token-pile .board-token{width:46%;height:46%;flex:0 0 46%}
