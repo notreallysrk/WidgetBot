@@ -146,7 +146,9 @@ async function persistGameAction(req, res, action) {
       if (state.players[state.currentPlayer]?.type !== "human") {
         return res.status(409).json({ ok: false, error: "Wait for your turn", state });
       }
-      state = LudoEngine.rollDice(state, crypto.randomInt(1, 7));
+      const rolledValue = crypto.randomInt(1, 7);
+      state = LudoEngine.rollDice(state, rolledValue);
+      state.lastHumanRoll = rolledValue;
     } else {
       const tokenIndex = Number(req.body?.tokenIndex);
       if (!Number.isInteger(tokenIndex)) return res.status(400).json({ ok: false, error: "Select a valid token" });
