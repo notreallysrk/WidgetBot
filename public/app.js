@@ -116,6 +116,7 @@
     if (!coords) return;
     const cell=boardEl.querySelector('[data-cell="'+coords[0]+'-'+coords[1]+'"]');
     if(!cell) return;
+    if(cell.querySelector(".board-token")) cell.classList.add("token-pile");
     const token=document.createElement("button");
     token.type="button"; token.className="board-token token-"+color+(movable?" movable":"");
     token.textContent=String(tokenIndex+1); token.dataset.playerIndex=String(playerIndex);
