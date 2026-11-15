@@ -2,7 +2,7 @@
   const tg = window.Telegram?.WebApp;
   if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor("#0c0715"); tg.setBackgroundColor("#0c0715"); } catch (_) {} }
 
-  const screens = ["home", "play", "profile", "leaderboard", "settings", "help"];
+  const screens = ["home", "play", "board", "profile", "leaderboard", "settings", "help"];
   const toastEl = document.getElementById("toast");
   let toastTimer;
   function toast(message) {
@@ -40,6 +40,31 @@
     }
   }
   applyUser(currentUser);
+
+  // Phase 02: render a responsive four-colour board preview; rules are Phase 03.
+  const boardEl = document.getElementById("ludo-board");
+  if (boardEl) {
+    const tokens = {red:[[2,2],[2,4],[4,2],[4,4]],green:[[2,10],[2,12],[4,10],[4,12]],blue:[[10,2],[10,4],[12,2],[12,4]],yellow:[[10,10],[10,12],[12,10],[12,12]]};
+    const path = new Set();
+    [[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[7,0],[6,0]].forEach(([r,c])=>path.add(r+"-"+c));
+    const safe=new Set(["6-1","2-6","1-8","6-13","8-13","12-8","13-6","8-1"]);
+    const lanes={red:[[7,1],[7,2],[7,3],[7,4],[7,5]],green:[[1,7],[2,7],[3,7],[4,7],[5,7]],yellow:[[7,9],[7,10],[7,11],[7,12],[7,13]],blue:[[13,7],[12,7],[11,7],[10,7],[9,7]]};
+    const laneMap=new Map();Object.entries(lanes).forEach(([color,cells])=>cells.forEach(([r,c])=>laneMap.set(r+"-"+c,color)));
+    for(let r=0;r<15;r++)for(let c=0;c<15;c++){
+      const cell=document.createElement("div");cell.className="board-cell";
+      const quad=r<6&&c<6?"red":r<6&&c>8?"green":r>8&&c<6?"blue":r>8&&c>8?"yellow":null;
+      if(quad)cell.classList.add(quad+"-home");
+      if((r>=1&&r<=4&&c>=1&&c<=4&&quad==="red")||(r>=1&&r<=4&&c>=10&&c<=13&&quad==="green")||(r>=10&&r<=13&&c>=1&&c<=4&&quad==="blue")||(r>=10&&r<=13&&c>=10&&c<=13&&quad==="yellow"))cell.classList.add("yard");
+      const lane=laneMap.get(r+"-"+c);if(lane)cell.classList.add("lane-"+lane);
+      if(path.has(r+"-"+c))cell.classList.add("track");
+      if(safe.has(r+"-"+c)){cell.classList.add("safe");cell.textContent="★";}
+      if(r===7&&c===7){cell.classList.add("center-home");cell.textContent="♛";}
+      Object.entries(tokens).forEach(([color,spots])=>spots.forEach(([tr,tc],i)=>{if(r===tr&&c===tc){const token=document.createElement("span");token.className="board-token token-"+color;token.textContent=String(i+1);cell.appendChild(token);}}));
+      boardEl.appendChild(cell);
+    }
+  }
+  const diceButton=document.getElementById("roll-dice");
+  if(diceButton){const faces=["⚀","⚁","⚂","⚃","⚄","⚅"];let rolling=false;diceButton.addEventListener("click",()=>{if(rolling)return;rolling=true;diceButton.classList.add("rolling");const face=document.getElementById("dice-face");let ticks=0;const spin=setInterval(()=>{face.textContent=faces[Math.floor(Math.random()*6)];if(++ticks>=9){clearInterval(spin);rolling=false;diceButton.classList.remove("rolling");toast("Preview only — playable dice arrives in Phase 03");}},75);try{tg?.HapticFeedback?.impactOccurred("light");}catch(_){} });}
 
   async function authenticate() {
     if (!initData) {
