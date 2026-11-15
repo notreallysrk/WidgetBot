@@ -162,10 +162,27 @@
   }
   async function rollDice() {
     if(!gameState||gameBusy)return;
-    gameBusy=true;renderGame();
-    try { const result=await api("/api/game/"+encodeURIComponent(gameState.id)+"/roll");gameState=result.state;renderGame(); }
-    catch(error){toast(error.message);}
-    finally{gameBusy=false;renderGame();}
+    gameBusy=true;
+    const diceFace=document.getElementById("dice-face");
+    const gameMessage=document.getElementById("game-message");
+    document.getElementById("roll-dice").disabled=true;
+    diceFace.textContent="…";
+    gameMessage.textContent="Rolling dice…";
+    try {
+      const result=await api("/api/game/"+encodeURIComponent(gameState.id)+"/roll");
+      gameState=result.state;
+      if(Number.isInteger(result.roll) && result.roll>=1 && result.roll<=6) {
+        diceFace.textContent=faces[result.roll];
+        gameMessage.textContent="You rolled "+result.roll+". "+(gameState.lastAction||"");
+      }
+      renderGame();
+    } catch(error) {
+      gameMessage.textContent="Dice roll failed: "+error.message;
+      toast("Dice roll failed: "+error.message);
+    } finally {
+      gameBusy=false;
+      renderGame();
+    }
   }
   async function moveToken(tokenIndex) {
     if(!gameState||gameBusy)return;
