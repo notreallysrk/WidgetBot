@@ -150,11 +150,12 @@ async function persistGameAction(req, res, action) {
     const doc = await games.findOne({ gameId, telegramId: user.id });
     if (!doc) return res.status(404).json({ ok: false, error: "Game not found" });
     let state = doc.state;
+    let rolledValue = null;
     if (action === "roll") {
       if (state.players[state.currentPlayer]?.type !== "human") {
         return res.status(409).json({ ok: false, error: "Wait for your turn", state });
       }
-      const rolledValue = crypto.randomInt(1, 7);
+      rolledValue = crypto.randomInt(1, 7);
       state = LudoEngine.rollDice(state, rolledValue);
       state.lastHumanRoll = rolledValue;
     } else {
@@ -179,7 +180,7 @@ async function persistGameAction(req, res, action) {
       );
       await games.updateOne({ _id: doc._id, completedAt: { $exists: false } }, { $set: { completedAt: new Date() } });
     }
-    return res.json({ ok: true, state, revision: doc.revision + 1 });
+    return res.json({ ok: true, state, revision: doc.revision + 1, roll: rolledValue });
   } catch (error) {
     console.error("Game action failed:", error.message);
     return res.status(400).json({ ok: false, error: error.message || "Game action failed" });
