@@ -57,8 +57,16 @@
       if((r>=1&&r<=4&&c>=1&&c<=4&&quad==="red")||(r>=1&&r<=4&&c>=10&&c<=13&&quad==="green")||(r>=10&&r<=13&&c>=1&&c<=4&&quad==="blue")||(r>=10&&r<=13&&c>=10&&c<=13&&quad==="yellow"))cell.classList.add("yard");
       const lane=laneMap.get(r+"-"+c);if(lane)cell.classList.add("lane-"+lane);
       if(path.has(r+"-"+c))cell.classList.add("track");
-      if(safe.has(r+"-"+c)){cell.classList.add("safe");cell.textContent="★";}
-      if(r===7&&c===7){cell.classList.add("center-home");cell.textContent="♛";}
+      const startSquares={"6-1":"red","1-8":"green","8-13":"yellow","13-6":"blue"};
+      const startColor=startSquares[r+"-"+c];if(startColor)cell.classList.add("start-"+startColor);
+      if(safe.has(r+"-"+c)){cell.classList.add("safe");cell.textContent="✦";}
+      if(r>=6&&r<=8&&c>=6&&c<=8){
+        if(r===7&&c===7){cell.classList.add("center-home");cell.textContent="♛";}
+        else if(r===6&&c===6)cell.classList.add("center-top-left");
+        else if(r===6&&c===8)cell.classList.add("center-top-right");
+        else if(r===8&&c===6)cell.classList.add("center-bottom-left");
+        else if(r===8&&c===8)cell.classList.add("center-bottom-right");
+      }
       Object.entries(tokens).forEach(([color,spots])=>spots.forEach(([tr,tc],i)=>{if(r===tr&&c===tc){const token=document.createElement("span");token.className="board-token token-"+color;token.textContent=String(i+1);cell.appendChild(token);}}));
       boardEl.appendChild(cell);
     }
